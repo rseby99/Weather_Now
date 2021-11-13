@@ -1,7 +1,10 @@
 import requests
 from flask import Flask, render_template, request
+from forms import RegistrationForm, LoginForm
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'b867cf8704988f0363c0a4b92ae45bef'
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
@@ -12,28 +15,37 @@ def landing_page():
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
-    if request.method == 'POST':
-        city = request.form['city']
-        country = request.form['country']
+    # if request.method == 'POST':
+    #     city = request.form['city']
+    #     country = request.form['country']
 
-        url = "https://community-open-weather-map.p.rapidapi.com/weather"
-        headers = {
-            'x-rapidapi-host': "community-open-weather-map.p.rapidapi.com",
-            'x-rapidapi-key': "b9ac356800mshf0da663a66d341bp12b8e4jsn145828c1f17e"
-        }
+    #     url = "https://community-open-weather-map.p.rapidapi.com/weather"
+    #     headers = {
+    #         'x-rapidapi-host': "community-open-weather-map.p.rapidapi.com",
+    #         'x-rapidapi-key': "b9ac356800mshf0da663a66d341bp12b8e4jsn145828c1f17e"
+    #     }
 
-        querystring = {"q": f"{city},{country}"}
+    #     querystring = {"q": f"{city},{country}"}
 
-        weather_url = requests.request("GET", url, headers=headers, params=querystring).json()
-        temp = weather_url['main']["temp"]
-        humidity = weather_url["main"]["humidity"]
-        wind_speed = weather_url["wind"]["speed"]
-        print(weather_url)
+    #     weather_url = requests.request("GET", url, headers=headers, params=querystring).json()
+    #     temp = weather_url['main']["temp"]
+    #     humidity = weather_url["main"]["humidity"]
+    #     wind_speed = weather_url["wind"]["speed"]
+    #     print(weather_url)
 
-        return render_template("result.html", city=city, temp=temp, humidity=humidity, wind_speed=wind_speed)
+    #     return render_template("result.html", city=city, temp=temp, humidity=humidity, wind_speed=wind_speed)
 
     return render_template("home.html")
 
+@app.route('/register')
+def register():
+    form = RegistrationForm()
+    return render_template('register.html', title='Register', form=form)
+
+@app.route('/login')
+def login():
+    form = LoginForm()
+    return render_template('login.html', title='Login', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
