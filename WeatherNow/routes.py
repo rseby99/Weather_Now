@@ -1,19 +1,22 @@
-import requests
-from flask import Flask, render_template, request
-from forms import RegistrationForm, LoginForm
+from WeatherNow.models import User
+from flask import render_template, request, flash, redirect, url_for
+from WeatherNow.forms import RegistrationForm, LoginForm
+from WeatherNow import app
 
-app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'b867cf8704988f0363c0a4b92ae45bef'
+
+
+
+
+
+# @app.route('/', methods=['GET', 'POST'])
+# def landing_page():
+
+#     return render_template("landing_page.html")
+    
+
 
 @app.route('/', methods=['GET', 'POST'])
-def landing_page():
-
-    return render_template("landing_page.html")
-
-
-
-@app.route('/home', methods=['GET', 'POST'])
 def home():
     # if request.method == 'POST':
     #     city = request.form['city']
@@ -37,15 +40,22 @@ def home():
 
     return render_template("home.html")
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.email.data}!', 'success')
+        return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == "admin@test.com" and form.password.data == "1234":
+            flash('You have been logged in !', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login unsuccessful !', 'danger')
+            
     return render_template('login.html', title='Login', form=form)
-
-if __name__ == '__main__':
-    app.run(debug=True)
