@@ -2,6 +2,9 @@ from WeatherNow.models import User
 from flask import render_template, request, flash, redirect, url_for
 from WeatherNow.forms import RegistrationForm, LoginForm
 from WeatherNow import app
+from WeatherNow import bcrypt
+from WeatherNow import db
+from flask_login import login_user
 
 
 
@@ -44,18 +47,23 @@ def home():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f'Account created for {form.email.data}!', 'success')
-        return redirect(url_for('home'))
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Account created! You can now log in.', 'success')
+        return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == "admin@test.com" and form.password.data == "1234":
-            flash('You have been logged in !', 'success')
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
             return redirect(url_for('home'))
         else:
-            flash('Login unsuccessful !', 'danger')
+            flash('Login unsuccessful. Please check email and password !', 'danger')
             
     return render_template('login.html', title='Login', form=form)
