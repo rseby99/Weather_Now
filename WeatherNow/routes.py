@@ -4,7 +4,7 @@ from WeatherNow.forms import RegistrationForm, LoginForm
 from WeatherNow import app
 from WeatherNow import bcrypt
 from WeatherNow import db
-from flask_login import login_user
+from flask_login import login_user, current_user, logout_user
 
 
 
@@ -20,6 +20,7 @@ from flask_login import login_user
 
 
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
 def home():
     # if request.method == 'POST':
     #     city = request.form['city']
@@ -45,6 +46,8 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -67,3 +70,8 @@ def login():
             flash('Login unsuccessful. Please check email and password !', 'danger')
             
     return render_template('login.html', title='Login', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
