@@ -1,0 +1,19 @@
+ body {
+    padding: 0;
+    height: 100vh;
+    background-color: #3f373741;
+  }
+
+
+.btn{
+  white-space: normal;
+}
+
+.weather-icon{
+  width: 5rem;
+}
+
+.weather-temperature{
+  font-size: 2rem;
+  font-weight: bold;
+} 
