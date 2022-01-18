@@ -1,0 +1,59 @@
+{% extends 'template.html' %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row d-flex align-items-center justify-content-center">
+        <div class="col-lg-6 ">
+            
+            <div class="card d-flex shadow border-5 rounded-3 p-5">
+                
+                    
+                    
+               
+                <div class="card-body">
+                    
+                    <h2 class="text-center">Get the latest weather forecast</h3>
+                    
+                    <form class="row mx-2" method="POST" action="">
+                        {{ form.hidden_tag() }}                       
+                        <div class="mb-3 text-center">
+                            {{form.city.label(class='form-label')}}
+                            {{form.city(class='form-control')}}
+                            
+                        </div>
+                        <div class="mb-3 text-center">
+                            {{form.country.label(class='form-label')}}
+                            {{form.country(class='form-control')}}
+                            <small><em>Note: Use ISO 3166 country codes (example: UK, RO)</em></small>
+                        </div>
+                        <div class="text-center my-4 mx-auto">
+                            {{form.get_current_weather(class='btn btn-primary form-buttons rounded-pill')}}
+                        </div>
+                        {% if current_user.is_authenticated %}
+                        <div class="text-center my-4 mx-auto">
+                            {{form.get_weather_7days(class='btn btn-primary form-buttons rounded-pill')}}
+                        </div>
+                        {% else %}
+                        <div class="text-center  my-4 mx-auto">
+                            <a href="{{ url_for('login') }}"><button type="button" class="btn btn-secondary form-buttons rounded-pill" disabled>Log in for 7 days forecast</button></a>
+                        </div>
+                        {% endif %}
+                        
+                       
+                    </form>
+                  
+                </div>
+        
+            </div>
+        </div>
+
+    </div>
+</div>
+
+  
+
+
+
+{% endblock content %}
+

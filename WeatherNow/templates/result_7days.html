@@ -1,0 +1,89 @@
+{% extends 'template.html' %}
+
+{% block content %}
+    
+        <div class="container h-100">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-sm-12 col-xs-12 pt-5">
+                    <h2 class="text-center">{{ weather_data['city'] }}, {{ weather_data['country'] }}</h2>
+                    {% for day in weather_data['weather'] %}
+                    <div class="card shadow my-4" style="color: #4B515D; border-radius: 35px;">
+                        <div class="card-body p-5">
+                    
+                          <div class="d-flex">
+                            <h6 class="flex-grow-1">{{ day['date']}}</h6>
+                          </div>
+                    
+                          <div class="d-flex flex-column text-center mt-5 mb-4">
+                              <p class="display-5 mb-0 font-weight-bold" style="color: #1C2331;">  {{day['description']}}</p>
+                              <h6 class="display-5 mb-0 font-weight-bold" style="color: #1C2331;">
+                              {% if unit=='metric' %}{{ day['temp_day'] }}°C
+                              {% else %}{{ day['temp_day'] }}°F       
+                              {% endif %}
+                             </h6>
+                            <span class="small" style="color: #1C2331;">Feels like {% if unit=='metric' %}{{ day['temp_feels_like_day'] }}°C
+                              {% else %}{{ day['temp_feels_like_day'] }}°F       
+                              {% endif %}</span>
+                          </div>
+                    
+                          <div class="d-flex align-items-center">
+                            <div class="flex-grow-1" style="font-size: 1rem;">
+                              <div><i class="fas fa-wind fa-fw" style="color: #868B94;"></i> <span class="ms-1">
+                                  {% if unit=='metric' %}{{ day['wind_speed'] }} meters/sec
+                                  {% else %}{{ day['wind_speed'] }} miles/hour 
+                                  {% endif %}
+                              </span></div>
+                              <div><i class="fas fa-tint fa-fw" style="color: #868B94;"></i> <span class="ms-1">{{ day['humidity']}}% </span></div>
+                              <div><i class="fas fa-thermometer-full fa-fw" style="color: #868B94;"></i> <span class="ms-1"> {{day['pressure']}} hpa </span></div>
+                            </div>
+                            <div>
+                              <img src="http://openweathermap.org/img/w/{{ day['icon'] }}.png" alt="{{ day['description'] }}" width="100px">
+                            </div>
+                          </div>
+                    
+                        </div>
+                      </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+
+{% endblock content %}
+
+<div class="card shadow" style="color: #4B515D; border-radius: 35px;">
+    <div class="card-body p-4">
+
+      <div class="d-flex">
+        <h6 class="flex-grow-1">{{ weather['city'] }}, {{weather['country']}}</h6>
+      </div>
+
+      <div class="d-flex flex-column text-center mt-5 mb-4">
+          <p class="display-5 mb-0 font-weight-bold" style="color: #1C2331;">  {{weather['description']}}</p>
+          <h6 class="display-5 mb-0 font-weight-bold" style="color: #1C2331;">
+          {% if unit=='metric' %}{{ weather['temp'] }}°C
+          {% else %}{{ weather['temp'] }}°F       
+          {% endif %}
+         </h6>
+        <span class="small" style="color: #1C2331;">Feels like {% if unit=='metric' %}{{ weather['temp_feels_like'] }}°C
+          {% else %}{{ weather['temp_feels_like'] }}°F       
+          {% endif %}</span>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <div class="flex-grow-1" style="font-size: 1rem;">
+          <div><i class="fas fa-wind fa-fw" style="color: #868B94;"></i> <span class="ms-1">
+              {% if unit=='metric' %}{{ weather['wind_speed'] }} meters/sec
+              {% else %}{{ weather['wind_speed'] }} miles/hour 
+              {% endif %}
+          </span></div>
+          <div><i class="fas fa-tint fa-fw" style="color: #868B94;"></i> <span class="ms-1">{{ weather['humidity']}}% </span></div>
+          <div><i class="fas fa-thermometer-full fa-fw" style="color: #868B94;"></i> <span class="ms-1"> {{weather['pressure']}} hpa </span></div>
+        </div>
+        <div>
+          <img src="http://openweathermap.org/img/w/{{ weather['icon'] }}.png" alt="{{ weather['description'] }}" width="100px">
+        </div>
+      </div>
+
+    </div>
+  </div>
